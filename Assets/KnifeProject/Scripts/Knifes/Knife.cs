@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Knife : MonoBehaviour
 {
-    [Header("")]
+    //[Header("")]
 
 
 }
