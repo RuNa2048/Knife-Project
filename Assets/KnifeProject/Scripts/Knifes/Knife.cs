@@ -52,7 +52,7 @@ public class Knife : MonoBehaviour
 			//Quaternion rotate = Quaternion.Euler(0, 0 ,0);
 			//transform.rotation = Quaternion.Slerp(transform.rotation, rotate, );
 
-			transform.forward
+			//transform.forward
 		}
 	}
 }
