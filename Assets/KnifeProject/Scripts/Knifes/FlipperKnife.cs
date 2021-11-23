@@ -11,8 +11,7 @@ public class FlipperKnife : MonoBehaviour
 	[Header("Timings")]
 	[SerializeField] private float _detectorPauseTime = 0.5f;
 
-
-	private float _discardingTime;
+	private float _timeStartKick;
 
 	private Rigidbody _rigidbody;
 	private SphereCollider _platformDetector;
@@ -28,7 +27,7 @@ public class FlipperKnife : MonoBehaviour
 	{
 		StartCoroutine(DetectorDelay());
 
-		_discardingTime = Time.time;
+		_timeStartKick = Time.time;
 		_rigidbody.isKinematic = false;
 
 		_rigidbody.AddForce(force * _kickForce, ForceMode.Impulse);
@@ -44,13 +43,19 @@ public class FlipperKnife : MonoBehaviour
 		_platformDetector.enabled = true;
 	}
 
-	private void OnTriggerEnter(Collider other)
+	private void OnTriggerEnter()
 	{
 		_rigidbody.isKinematic = true;
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		//Debug.Log("Lose");
+		float timeInAir = _timeStartKick;
+
+		if (!_rigidbody.isKinematic)
+		{
+			
+		}
+
 	}
 }
