@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,10 +12,11 @@ public class FlipperKnife : MonoBehaviour
 	[Header("Timings")]
 	[SerializeField] private float _detectorPauseTime = 0.5f;
 
-	private float _timeStartKick;
+	public event Action<FlipperKnife> OnDestructionKnife;
 
 	private Rigidbody _rigidbody;
 	private SphereCollider _platformDetector;
+
 
 
 	private void Awake()
@@ -23,11 +25,16 @@ public class FlipperKnife : MonoBehaviour
 		_platformDetector = GetComponent<SphereCollider>();
 	}
 
-	public void Discarding(Vector2 force)
+	public void ReductionToLastSafePos(Vector3 pos)
+	{
+		_rigidbody.velocity = Vector3.zero;
+		transform.position = pos;
+	}
+
+	public void Moving(Vector2 force)
 	{
 		StartCoroutine(DetectorDelay());
 
-		_timeStartKick = Time.time;
 		_rigidbody.isKinematic = false;
 
 		_rigidbody.AddForce(force * _kickForce, ForceMode.Impulse);
@@ -50,12 +57,14 @@ public class FlipperKnife : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		float timeInAir = _timeStartKick;
-
 		if (!_rigidbody.isKinematic)
 		{
-			
+			Destruction();
 		}
+	}
 
+	private void Destruction()
+	{
+		OnDestructionKnife?.Invoke(this);
 	}
 }

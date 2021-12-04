@@ -11,7 +11,7 @@ public class PlayerSwipe : MonoBehaviour
     private Vector2 _startSwipePos;
     private Vector2 _endSwipePos;
 
-	[SerializeField] private Camera _mainCamera;
+	private Camera _mainCamera;
 	
 	private void Awake()
 	{
@@ -48,6 +48,6 @@ public class PlayerSwipe : MonoBehaviour
 	{
 		Vector2 swipeForce = _endSwipePos - _startSwipePos;
 
-		_knife.Discarding(swipeForce);
+		_knife.Moving(swipeForce);
 	}
 }
