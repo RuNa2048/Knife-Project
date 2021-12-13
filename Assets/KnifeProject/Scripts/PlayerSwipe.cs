@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class PlayerSwipe : MonoBehaviour
 {
-	
+	[Header("Limitation Values")]
+	[SerializeField] private float _maxHorizontalSwipe = 1f;
+	[SerializeField] private float _minVerticalSwipe = 1f;
 	
 	private FlipperKnife _knife;
 
@@ -46,8 +48,35 @@ public class PlayerSwipe : MonoBehaviour
 
 	private void Swipe()
 	{
+		if (_knife.IsFlying)
+		{
+			return;
+		}
+
 		Vector2 swipeForce = _endSwipePos - _startSwipePos;
 
+		swipeForce = CheckSwipeForValidValues(swipeForce);
+
 		_knife.Moving(swipeForce);
+	}
+
+	private Vector2 CheckSwipeForValidValues(Vector2 swipe)
+	{
+		if (swipe.x > _maxHorizontalSwipe)
+		{
+			swipe.x = _maxHorizontalSwipe;
+		}
+
+		if (swipe.x < - _maxHorizontalSwipe)
+		{
+			swipe.x = - _maxHorizontalSwipe;
+		}
+		
+		if (swipe.y < _minVerticalSwipe)
+		{
+			swipe.y = _minVerticalSwipe;
+		}
+
+		return swipe;
 	}
 }
