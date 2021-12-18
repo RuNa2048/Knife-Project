@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 7868828986387271801}
   - component: {fileID: 7868828986387271798}
   m_Layer: 0
-  m_Name: Knife
+  m_Name: Knife_1
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -62,8 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3659797b3a28bb4ebec0ab970e25c70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _horizontalKickForce: 3
-  _verticalKickForce: 6
+  _horizontalKickForce: 6
+  _verticalKickForce: 10
   _torqueForce: 20
   _detectorPauseTime: 0.3
   _spawnRotating: {x: 180, y: 0, z: 0}

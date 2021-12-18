@@ -37,7 +37,7 @@ public class FlipperKnife : MonoBehaviour
 	{
 		transform.eulerAngles = _spawnRotating;
 
-		_platformWallTag = ConstantsGameTags.PlatformWallTextTag;
+		_platformWallTag = ConstantsGameTags.PlatformTextTag;
 	}
 
 	public void ReductionToLastSafePos(Vector3 pos)
@@ -108,7 +108,7 @@ public class FlipperKnife : MonoBehaviour
 		}
 	}
 
-	private void Destruction()
+	public void Destruction()
 	{
 		OnDestructionKnife?.Invoke(this);
 	}
