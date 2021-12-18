@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5bc330987ed36f4cbce87da3aff1937, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerTag: Player
   _checkpointPos: {fileID: 3770475955692609513}
   _checkpoint: {fileID: 0}
 --- !u!65 &6818404226141065027
@@ -167,6 +166,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 2e2222f884ff8be488f0b7851eaea608,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: c0dc264ca44b0394e8c3deeda4574918, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 2e2222f884ff8be488f0b7851eaea608,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 30ed767c136ac2a46914e7cd402ca415, type: 2}
     - target: {fileID: 919132149155446097, guid: 2e2222f884ff8be488f0b7851eaea608,
         type: 3}
       propertyPath: m_Name

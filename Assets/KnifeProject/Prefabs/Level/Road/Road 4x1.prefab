@@ -72,7 +72,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: bce0b06e35485f44daa3dfd105e61006, type: 2}
+  - {fileID: 2100000, guid: c0dc264ca44b0394e8c3deeda4574918, type: 2}
   - {fileID: 2100000, guid: 30ed767c136ac2a46914e7cd402ca415, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -182,7 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5bc330987ed36f4cbce87da3aff1937, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerTag: Player
   _checkpointPos: {fileID: 1405233880357019243}
   _checkpoint: {fileID: 0}
 --- !u!65 &7858951307845044006
@@ -294,7 +293,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: bce0b06e35485f44daa3dfd105e61006, type: 2}
+      objectReference: {fileID: 2100000, guid: c0dc264ca44b0394e8c3deeda4574918, type: 2}
     - target: {fileID: -7511558181221131132, guid: 786ce7b6fa5a6704e9d6960516b8c527,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -385,7 +384,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: bce0b06e35485f44daa3dfd105e61006, type: 2}
+      objectReference: {fileID: 2100000, guid: c0dc264ca44b0394e8c3deeda4574918, type: 2}
     - target: {fileID: -7511558181221131132, guid: 3dd81285067ef564faf81a43f15ef04f,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
@@ -481,7 +480,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: bce0b06e35485f44daa3dfd105e61006, type: 2}
+      objectReference: {fileID: 2100000, guid: c0dc264ca44b0394e8c3deeda4574918, type: 2}
     - target: {fileID: -7511558181221131132, guid: 3dd81285067ef564faf81a43f15ef04f,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
