@@ -4,16 +4,33 @@ using UnityEngine;
 
 public class Checkpoint: MonoBehaviour
 {
-    public Vector3 LastCheckpointPos { get; private set; }
+    [SerializeField] private List<Platform> _platforms;
 
-    
+    public Vector3 LastCheckpointPos { get { return _lastCheckpoint.position; }  private set { } }
 
-    public void SavingPosition(Vector3 pos)
+    private Transform _lastCheckpoint;
+
+    private int _currentPlatformNumer;
+
+	private void Start()
+	{
+        _lastCheckpoint = _platforms[_currentPlatformNumer].CheckpointPosition;
+    }
+
+    public bool SavingPosition(Platform newPlatform)
     {
-        if (LastCheckpointPos == pos)
-            return;
+        Debug.Log(_platforms[_currentPlatformNumer + 1].transform + " " + newPlatform);
+
+        if (_platforms[_currentPlatformNumer + 1].transform == newPlatform.transform)
+        {
+            _currentPlatformNumer++;
+            _lastCheckpoint = newPlatform.CheckpointPosition;
+
+            return true;
+        }
 
 
-        LastCheckpointPos = pos;
+
+        return false;
     }
 }

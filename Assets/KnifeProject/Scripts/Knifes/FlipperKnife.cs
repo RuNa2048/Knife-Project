@@ -22,19 +22,22 @@ public class FlipperKnife : MonoBehaviour
 	public event Action<FlipperKnife> OnDestructionKnife;
 
 	private Rigidbody _rigidbody;
-	private SphereCollider[] _colliders;
+	private SphereCollider _detectorCollider;
+
+	private bool _isJumping = false;
+	private string _platformWallTag;
 
 	private void Awake()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
-		_colliders = GetComponents<SphereCollider>();
-
-		transform.eulerAngles = _spawnRotating;
+		_detectorCollider = GetComponent<SphereCollider>();
 	}
 
 	private void Start()
 	{
-		
+		transform.eulerAngles = _spawnRotating;
+
+		_platformWallTag = ConstantsGameTags.PlatformTextTag;
 	}
 
 	public void ReductionToLastSafePos(Vector3 pos)
@@ -58,6 +61,11 @@ public class FlipperKnife : MonoBehaviour
 		{
 			StartCoroutine(DetectorDelay());
 
+			//if (force.x == 0f)
+			//{ 
+				
+			//}
+
 			_rigidbody.AddTorque(_torqueForce * force.x, 0f, 0f, ForceMode.Impulse);
 		}
 
@@ -75,23 +83,24 @@ public class FlipperKnife : MonoBehaviour
 
 	private void ChangingStateOfColliders(bool state)
 	{
-		foreach (Collider collider in _colliders)
-		{
-			collider.enabled = state;
-		}
+		_detectorCollider.enabled = state;
+		_isJumping = !state;
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		_rigidbody.isKinematic = true;
-		IsFlying = false;
+		if (other.CompareTag(_platformWallTag))
+		{
+			_rigidbody.isKinematic = true;
+			IsFlying = false;
 
-		OnStikingKnife?.Invoke();
+			OnStikingKnife?.Invoke();
+		}
 	}
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (!_rigidbody.isKinematic)
+		if (!_rigidbody.isKinematic && !_isJumping)
 		{
 			StartCoroutine(DetectorDelay());
 
@@ -99,7 +108,7 @@ public class FlipperKnife : MonoBehaviour
 		}
 	}
 
-	private void Destruction()
+	public void Destruction()
 	{
 		OnDestructionKnife?.Invoke(this);
 	}
