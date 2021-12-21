@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &310376036052065279
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4060067648638199306}
+  m_Layer: 0
+  m_Name: CheckpointPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4060067648638199306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 310376036052065279}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.9, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8657886610501507473}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2742625218065943047
 GameObject:
   m_ObjectHideFlags: 0
@@ -9,6 +39,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8657886610501507473}
+  - component: {fileID: 7753460547717907594}
+  - component: {fileID: 5022118888105306380}
   m_Layer: 0
   m_Name: Box_Sign
   m_TagString: Untagged
@@ -29,9 +61,50 @@ Transform:
   m_Children:
   - {fileID: 8206189229493810075}
   - {fileID: 893608757161556210}
+  - {fileID: 4060067648638199306}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7753460547717907594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2742625218065943047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5bc330987ed36f4cbce87da3aff1937, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _checkpointPos: {fileID: 4060067648638199306}
+  _checkpoint: {fileID: 0}
+--- !u!65 &5022118888105306380
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2742625218065943047}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.6232128, y: 0.0854069, z: 1.6232138}
+  m_Center: {x: -0.011009216, y: 0.7605544, z: 0.010975361}
+--- !u!65 &4655431763119845086
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8838856382257899809}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.6232128, y: 1.5230786, z: 1.6232138}
+  m_Center: {x: -0.011009216, y: -0.050071657, z: 0.010975361}
 --- !u!1001 &859067209769000729
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -186,6 +259,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d12c31aceb260604981c0b1e09721588, type: 3}
+--- !u!1 &8838856382257899809 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d12c31aceb260604981c0b1e09721588,
+    type: 3}
+  m_PrefabInstance: {fileID: 8532215579868664944}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8206189229493810075 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d12c31aceb260604981c0b1e09721588,
