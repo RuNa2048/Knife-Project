@@ -19,8 +19,6 @@ public class Checkpoint: MonoBehaviour
 
     public bool SavingPosition(Platform newPlatform)
     {
-        Debug.Log(_platforms[_currentPlatformNumer + 1].transform + " " + newPlatform);
-
         if (_platforms[_currentPlatformNumer + 1].transform == newPlatform.transform)
         {
             _currentPlatformNumer++;
