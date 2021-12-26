@@ -19,6 +19,11 @@ public class Checkpoint: MonoBehaviour
 
     public bool SavingPosition(Platform newPlatform)
     {
+        if (_platforms[_currentPlatformNumer].transform == newPlatform.transform)
+        {
+            return true;
+        }
+
         if (_platforms[_currentPlatformNumer + 1].transform == newPlatform.transform)
         {
             _currentPlatformNumer++;

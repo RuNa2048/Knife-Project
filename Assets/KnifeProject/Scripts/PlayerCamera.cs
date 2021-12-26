@@ -8,19 +8,20 @@ public class PlayerCamera : MonoBehaviour
 	[SerializeField] private FlipperKnife _player;
 	[SerializeField] private Checkpoint _checkpoint;
 
-	[Header("Distance To Points")]
-	[SerializeField] private Vector3 _distanceToPlayer;
-	[SerializeField] private Vector3 _distanceToCenterScreen;
-
 	[Header("Moving Settings")]
 	[SerializeField] private float _speed = 10f;
 	[SerializeField] private float movingThreshold = 0.5f;
+
+	[Header("Distance To Points")]
+	[SerializeField] private Vector3 _distanceToPlayer;
+	[SerializeField] private Vector3 _distanceToCenterScreen;
 
 	private bool _isMoving = false;
 
 	private void Start()
 	{
 		_player.OnStikingKnife += MoveToNextCheckpoint;
+		_distanceToPlayer = _player.transform.position - transform.position;
 	}
 
 	private void MoveToNextCheckpoint()
@@ -30,7 +31,7 @@ public class PlayerCamera : MonoBehaviour
 			return;
 		}
 
-		Vector3 position = _checkpoint.LastCheckpointPos + _distanceToPlayer;
+		Vector3 position = _checkpoint.LastCheckpointPos - _distanceToPlayer;
 		position.y = transform.position.y;
 
 		StartCoroutine(Moving(position));

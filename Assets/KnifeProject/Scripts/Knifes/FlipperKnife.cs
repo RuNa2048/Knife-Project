@@ -25,7 +25,7 @@ public class FlipperKnife : MonoBehaviour
 	private SphereCollider _detectorCollider;
 
 	private bool _isJumping = false;
-	private string _platformWallTag;
+	private string _platformTag;
 
 	private void Awake()
 	{
@@ -37,7 +37,7 @@ public class FlipperKnife : MonoBehaviour
 	{
 		transform.eulerAngles = _spawnRotating;
 
-		_platformWallTag = ConstantsGameTags.PlatformTextTag;
+		_platformTag = ConstantsGameTags.PlatformTextTag;
 	}
 
 	public void ReductionToLastSafePos(Vector3 pos)
@@ -89,7 +89,7 @@ public class FlipperKnife : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag(_platformWallTag))
+		if (other.CompareTag(_platformTag))
 		{
 			_rigidbody.isKinematic = true;
 			IsFlying = false;

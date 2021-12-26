@@ -7,7 +7,10 @@ public class PlayerSwipe : MonoBehaviour
 	[Header("Limitation Values")]
 	[SerializeField] private float _maxHorizontalSwipe = 1f;
 	[SerializeField] private float _minVerticalSwipe = 1f;
-	
+
+	[Header("References")]
+	[SerializeField] private SwipeUI _swipe;
+
 	private FlipperKnife _knife;
 
     private Vector2 _startSwipePos;
@@ -34,15 +37,29 @@ public class PlayerSwipe : MonoBehaviour
 
 	private void CheckInput()
 	{
-		if (Input.GetMouseButtonDown(0))
+		if (Input.touchCount > 0)
 		{
-			_startSwipePos = _mainCamera.ScreenToViewportPoint(Input.mousePosition);
-		}
+			Touch touch = Input.GetTouch(0);
 
-		if (Input.GetMouseButtonUp(0))
-		{
-			_endSwipePos = _mainCamera.ScreenToViewportPoint(Input.mousePosition);
-			Swipe();
+			_swipe.ActivateSwipe(touch, _mainCamera);
+
+			switch (touch.phase)
+			{
+				case TouchPhase.Began:
+					{
+						_startSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
+
+
+						break;
+					}
+				case TouchPhase.Ended:
+					{
+						_endSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
+						Swipe();
+
+						break;
+					}
+			}
 		}
 	}
 
