@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class FlipperKnife : MonoBehaviour
 {
-	[Header("Physics parametrs")]
+	[Header("Physics Parametrs")]
 	[SerializeField] private float _horizontalKickForce = 3f;
 	[SerializeField] private float _verticalKickForce = 6f;
 	[SerializeField] private float _torqueForce = 20f;
@@ -13,8 +13,9 @@ public class FlipperKnife : MonoBehaviour
 	[Header("Timings")]
 	[SerializeField] private float _detectorPauseTime = 0.5f;
 
-	[Header("Positions settings")]
+	[Header("Transform Settings")]
 	[SerializeField] private Vector3 _spawnRotating;
+	[SerializeField] private float _minStandRotation = 0.86f;
 
 	public bool IsFlying { get; private set; } = false;
 
@@ -25,6 +26,7 @@ public class FlipperKnife : MonoBehaviour
 	private SphereCollider _detectorCollider;
 
 	private bool _isJumping = false;
+	private bool _ignoreCollisions = false;
 	private string _platformTag;
 
 	private void Awake()
@@ -42,6 +44,8 @@ public class FlipperKnife : MonoBehaviour
 
 	public void ReductionToLastSafePos(Vector3 pos)
 	{
+		_ignoreCollisions = false;
+
 		_rigidbody.velocity = Vector3.zero;
 		_rigidbody.angularVelocity = Vector3.zero;
 
@@ -60,11 +64,6 @@ public class FlipperKnife : MonoBehaviour
 		if (force.y > 0f)
 		{
 			StartCoroutine(DetectorDelay());
-
-			//if (force.x == 0f)
-			//{ 
-				
-			//}
 
 			_rigidbody.AddTorque(_torqueForce * force.x, 0f, 0f, ForceMode.Impulse);
 		}
@@ -89,8 +88,13 @@ public class FlipperKnife : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag(_platformTag))
+		if (other.CompareTag(_platformTag) && !_ignoreCollisions)
 		{
+			if (CheckAngleOfInclination())
+			{
+				return;
+			}
+
 			_rigidbody.isKinematic = true;
 			IsFlying = false;
 
@@ -100,7 +104,7 @@ public class FlipperKnife : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (!_rigidbody.isKinematic && !_isJumping)
+		if (!_rigidbody.isKinematic && !_isJumping && !_ignoreCollisions)
 		{
 			StartCoroutine(DetectorDelay());
 
@@ -110,6 +114,22 @@ public class FlipperKnife : MonoBehaviour
 
 	public void Destruction()
 	{
+		_ignoreCollisions = true;
+
 		OnDestructionKnife?.Invoke(this);
+	}
+
+	private bool CheckAngleOfInclination()
+	{
+		float currentXRot = transform.rotation.x;
+
+		Debug.Log(transform.rotation.x);
+
+		if (currentXRot > _minStandRotation || currentXRot < -_minStandRotation)
+		{
+			return false;
+		}
+
+		return true;
 	}
 }

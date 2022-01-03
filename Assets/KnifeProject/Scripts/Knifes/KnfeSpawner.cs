@@ -5,9 +5,9 @@ public class KnfeSpawner : MonoBehaviour
 {
 	[Header("References")]
     [SerializeField] FlipperKnife[] _knifes;
-	[SerializeField] Checkpoint  _checkpoint;
+	[SerializeField] PlatformKeeper  _platformKeeper;
 
-	[Header("Settings For Return Knife On Checkpoint Pos")]
+	[Header("Settings For Return Knife On PlatformKeeper Pos")]
 	[SerializeField] private float _delayTime;
 
 	private void Start()
@@ -27,6 +27,6 @@ public class KnfeSpawner : MonoBehaviour
 	{
 		yield return new WaitForSeconds(_delayTime);
 
-		knife.ReductionToLastSafePos(_checkpoint.LastCheckpointPos);
+		knife.ReductionToLastSafePos(_platformKeeper.LastCheckpointPos);
 	}
 }

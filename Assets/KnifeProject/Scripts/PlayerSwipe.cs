@@ -6,16 +6,14 @@ public class PlayerSwipe : MonoBehaviour
 {
 	[Header("Limitation Values")]
 	[SerializeField] private float _maxHorizontalSwipe = 1f;
-	[SerializeField] private float _minVerticalSwipe = 1f;
+	[SerializeField] private float _stoppingSwipeValue = 0f;
 
 	[Header("References")]
 	[SerializeField] private SwipeUI _swipe;
 
 	private FlipperKnife _knife;
-
     private Vector2 _startSwipePos;
     private Vector2 _endSwipePos;
-
 	private Camera _mainCamera;
 	
 	private void Awake()
@@ -31,8 +29,6 @@ public class PlayerSwipe : MonoBehaviour
 	private void Update()
 	{
 		CheckInput();
-
-
 	}
 
 	private void CheckInput()
@@ -89,9 +85,10 @@ public class PlayerSwipe : MonoBehaviour
 			swipe.x = - _maxHorizontalSwipe;
 		}
 		
-		if (swipe.y < _minVerticalSwipe)
+		if (swipe.y < _stoppingSwipeValue)
 		{
-			swipe.y = _minVerticalSwipe;
+			swipe.y = _stoppingSwipeValue;
+			swipe.x = _stoppingSwipeValue;
 		}
 
 		return swipe;

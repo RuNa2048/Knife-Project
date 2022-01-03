@@ -5,12 +5,12 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour
 {
 	[Header("Refernces")]
-	[SerializeField] private FlipperKnife _player;
-	[SerializeField] private Checkpoint _checkpoint;
+	[SerializeField] private FlipperKnife _knife;
 
 	[Header("Moving Settings")]
 	[SerializeField] private float _speed = 10f;
-	[SerializeField] private float movingThreshold = 0.5f;
+	[SerializeField] private float _movingThreshold = 0.5f;
+	[SerializeField] private float _distanceToMoveForward = 12f;
 
 	[Header("Distance To Points")]
 	[SerializeField] private Vector3 _distanceToPlayer;
@@ -20,19 +20,18 @@ public class PlayerCamera : MonoBehaviour
 
 	private void Start()
 	{
-		_player.OnStikingKnife += MoveToNextCheckpoint;
-		_distanceToPlayer = _player.transform.position - transform.position;
+		_knife.OnStikingKnife += MoveToKnife;
+		_distanceToPlayer = _knife.transform.position - transform.position;
 	}
 
-	private void MoveToNextCheckpoint()
+	private void MoveToKnife()
 	{
 		if (_isMoving)
 		{
 			return;
 		}
 
-		Vector3 position = _checkpoint.LastCheckpointPos - _distanceToPlayer;
-		position.y = transform.position.y;
+		Vector3 position = _knife.transform.position - _distanceToPlayer;
 
 		StartCoroutine(Moving(position));
 	}
@@ -41,7 +40,7 @@ public class PlayerCamera : MonoBehaviour
 	{
 		_isMoving = true;
 
-		while (Vector3.Distance(transform.position, pos) > movingThreshold)
+		while (Vector3.Distance(transform.position, pos) > _movingThreshold)
 		{
 			transform.position = Vector3.Slerp(transform.position, pos, _speed * Time.deltaTime);
 
@@ -49,6 +48,25 @@ public class PlayerCamera : MonoBehaviour
 		}
 
 		_isMoving = false;
+	}
+
+	public void MoveForwardToDistance()
+	{
+		StopAllCoroutines();
+
+		Vector3 newPos = transform.position;
+		newPos.z += _distanceToMoveForward;
+
+		StartCoroutine(Moving(newPos));
+	}
+
+	public void ReturnBackToLastPosition()
+	{
+		StopAllCoroutines();
+
+		_isMoving = false;
+
+		MoveToKnife();
 	}
 
 	//private void LateUpdate()

@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/KnifeProject/Scenes/Developer/Dev_Map_1.unity
+    guid: 1134c8c3066b4934b843803a81018ccc
   m_configObjects: {}

@@ -179,11 +179,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7205936198002082947}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e5bc330987ed36f4cbce87da3aff1937, type: 3}
+  m_Script: {fileID: 11500000, guid: c449dcca089856e418e490184b44daaf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _checkpointPos: {fileID: 1405233880357019243}
-  _checkpoint: {fileID: 0}
 --- !u!65 &7858951307845044006
 BoxCollider:
   m_ObjectHideFlags: 0
