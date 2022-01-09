@@ -2,104 +2,113 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformKeeper: MonoBehaviour
+public class PlatformKeeper : MonoBehaviour
 {
-    [Header("Refrences")]
-    [SerializeField] private List<Platform> _platforms;
-    [SerializeField] private FlipperKnife _knife;
+	[Header("Refrences")]
+	[SerializeField] private List<Platform> _platforms;
+	[SerializeField] private FlipperKnife _knife;
 
-    [SerializeField] private bool _testedMode;
+	[SerializeField] private bool _testedMode;
 
-    private Platform _newPlatform;
+	private Transform _lastSaveCheckpoint;
+	public Vector3 LastSaveCheckpointPos() => _lastSaveCheckpoint.position;
 
-    public Vector3 LastCheckpointPos { get { return _lastSaveCheckpoint.position; }  private set { } }
+	private Platform _newPlatform;
+	private PlatformWithCheckpoint _firstCheckpoint;
 
-    private List<PlatformWithCheckpoint> _checkpointPlatforms;
-
-    private Transform _lastSaveCheckpoint;
-
-    private int _currentPlatformNumber;
-    private int _currentNumCheckpointPlatform;
+	private int _idLastPlatform = -1;
 
 	private void Start()
 	{
-        _checkpointPlatforms = new List<PlatformWithCheckpoint>();
+		foreach (var platform in _platforms)
+		{
+			if (platform is PlatformWithCheckpoint plat)
+			{
+				_firstCheckpoint = plat;
+
+				break;
+			}
+		}
+
+		int platformID = 0;
 
 		foreach (var platform in _platforms)
 		{
-            if (platform is PlatformWithCheckpoint plat)
-            {
-                _checkpointPlatforms.Add(plat);
-            }
+			platform.Init(this, platformID);
+
+			platformID++;
 		}
+	}   
 
-        _lastSaveCheckpoint = _checkpointPlatforms[_currentPlatformNumber].CheckpointPosition;
+	public void AllowToStand(Platform platform)
+	{
+		_newPlatform = platform;
 
-		foreach (var platform in _platforms)
+		if (_idLastPlatform == _newPlatform.ID)
 		{
-            platform.Init(this);
+			return;
 		}
 
-    }   
+		if (_newPlatform is ForbiddenPlatform)
+		{
+			_knife.Destruction();
 
-    public void AllowToStand(Platform platform)
-    {
-        _newPlatform = platform;
+			return;
+		}
 
-        if (_newPlatform is ForbiddenPlatform)
-        {
-            _knife.Destruction();
+		if (CheckIDPlatform())
+		{
+			if (_newPlatform is PlatformWithoutCheckpoint)
+			{
+				StandKnife();
+			}
 
-            return;
-        }
+			if (_newPlatform is PlatformWithCheckpoint checkpointPlatform)
+			{
+				StandKnife();
+				SavingPosition(checkpointPlatform);
+			}
+		}
+		else
+		{
+			_knife.Destruction();
+		}
+	}
 
-        if (_newPlatform is PlatformWithCheckpoint && CheckPlatformSequence())
-        {
-            SavingPosition();
-        }
-    }
+	private bool CheckIDPlatform()
+	{
+		bool futurePlatform = true;
 
-    private bool CheckPlatformSequence()
-    {
-        if (_platforms[_currentPlatformNumber].transform == _newPlatform.transform)
-        {
-            return false;
-        }
+		if (_idLastPlatform > _newPlatform.ID)
+		{
+			futurePlatform = false;
 
-        if (_platforms[_currentPlatformNumber + 1].transform == _newPlatform.transform)
-        {
-            return true;
-        }
+			return futurePlatform;
+		}
 
-        if (_checkpointPlatforms[_currentPlatformNumber + 1].transform == _newPlatform.transform)
-        {
-            return true;
-        }
+		return futurePlatform;
+	}
 
-        _knife.Destruction();
+	private void StandKnife()
+	{
+		_idLastPlatform = _newPlatform.ID;
+	}
 
-        return false;
-    }
+	private void SavingPosition(PlatformWithCheckpoint checkpoint)
+	{
+		_lastSaveCheckpoint = checkpoint.CheckpointTransform;
 
-    private void SavingPosition()
-    {
-        _currentPlatformNumber++;
-        _currentNumCheckpointPlatform++;
+		if (_platforms[_platforms.Count- 1] == checkpoint)
+		{
+			FinishGame();
+		}
+	}
 
-        _lastSaveCheckpoint = _checkpointPlatforms[_currentNumCheckpointPlatform].CheckpointPosition;
+	private void FinishGame()
+	{
+		_lastSaveCheckpoint = _firstCheckpoint.CheckpointTransform;
+		_idLastPlatform = -1;
 
-        if (_checkpointPlatforms.Count - 1 == _currentNumCheckpointPlatform)
-        {
-            FinishGame();
-        }
-    }
-
-    private void FinishGame()
-    {
-        _currentNumCheckpointPlatform = 0;
-        _currentPlatformNumber = 0;
-        _lastSaveCheckpoint = _checkpointPlatforms[_currentNumCheckpointPlatform].CheckpointPosition;
-
-        _knife.Destruction();
-    }
+		_knife.Destruction();
+	}
 }

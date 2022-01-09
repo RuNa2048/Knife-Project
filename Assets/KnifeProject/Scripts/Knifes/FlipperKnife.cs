@@ -123,8 +123,6 @@ public class FlipperKnife : MonoBehaviour
 	{
 		float currentXRot = transform.rotation.x;
 
-		Debug.Log(transform.rotation.x);
-
 		if (currentXRot > _minStandRotation || currentXRot < -_minStandRotation)
 		{
 			return false;

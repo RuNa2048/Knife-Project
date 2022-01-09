@@ -27,6 +27,6 @@ public class KnfeSpawner : MonoBehaviour
 	{
 		yield return new WaitForSeconds(_delayTime);
 
-		knife.ReductionToLastSafePos(_platformKeeper.LastCheckpointPos);
+		knife.ReductionToLastSafePos(_platformKeeper.LastSaveCheckpointPos());
 	}
 }
