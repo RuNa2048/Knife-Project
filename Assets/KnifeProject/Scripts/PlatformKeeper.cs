@@ -60,7 +60,9 @@ public class PlatformKeeper : MonoBehaviour
 		{
 			if (_newPlatform is PlatformWithoutCheckpoint)
 			{
-				StandKnife();
+				Debug.Log(1);
+
+				//StandKnife();
 			}
 
 			if (_newPlatform is PlatformWithCheckpoint checkpointPlatform)

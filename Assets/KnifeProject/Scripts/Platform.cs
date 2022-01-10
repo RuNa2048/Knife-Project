@@ -2,7 +2,7 @@
 
 public abstract class Platform : MonoBehaviour
 {
-	private int _id;
+	[SerializeField] private int _id;
 	public int ID => _id;
 
 	private PlatformKeeper _platformKeeper;
@@ -22,7 +22,7 @@ public abstract class Platform : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.tag == _playerTag)
+		if (other.TryGetComponent<FlipperKnife>(out var knife) && !knife.IgnoreCollisions)
 		{
 			_platformKeeper.AllowToStand(this);
 		}

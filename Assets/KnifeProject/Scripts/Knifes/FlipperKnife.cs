@@ -17,22 +17,22 @@ public class FlipperKnife : MonoBehaviour
 	[SerializeField] private Vector3 _spawnRotating;
 	[SerializeField] private float _minStandRotation = 0.86f;
 
-	public bool IsFlying { get; private set; } = false;
+	public bool Flying => _flying;
+	public bool IgnoreCollisions => _ignoreCollisions;
 
 	public event Action OnStikingKnife;
 	public event Action<FlipperKnife> OnDestructionKnife;
 
 	private Rigidbody _rigidbody;
-	private SphereCollider _detectorCollider;
 
-	private bool _isJumping = false;
+	private bool _jumping = false;
+	private bool _flying = false;
 	private bool _ignoreCollisions = false;
 	private string _platformTag;
 
 	private void Awake()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
-		_detectorCollider = GetComponent<SphereCollider>();
 	}
 
 	private void Start()
@@ -55,7 +55,7 @@ public class FlipperKnife : MonoBehaviour
 
 	public void Moving(Vector2 force)
 	{
-		IsFlying = true;
+		_flying = true;
 		_rigidbody.isKinematic = false;
 
 		force.x *= _horizontalKickForce;
@@ -82,13 +82,12 @@ public class FlipperKnife : MonoBehaviour
 
 	private void ChangingStateOfColliders(bool state)
 	{
-		_detectorCollider.enabled = state;
-		_isJumping = !state;
+		_jumping = !state;
 	}
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.CompareTag(_platformTag) && !_ignoreCollisions)
+		if (other.CompareTag(_platformTag) && !_jumping && !_ignoreCollisions)
 		{
 			if (CheckAngleOfInclination())
 			{
@@ -96,7 +95,7 @@ public class FlipperKnife : MonoBehaviour
 			}
 
 			_rigidbody.isKinematic = true;
-			IsFlying = false;
+			_flying = false;
 
 			OnStikingKnife?.Invoke();
 		}
@@ -104,7 +103,7 @@ public class FlipperKnife : MonoBehaviour
 
 	private void OnCollisionEnter(Collision collision)
 	{
-		if (!_rigidbody.isKinematic && !_isJumping && !_ignoreCollisions)
+		if (!_rigidbody.isKinematic && !_jumping && !_ignoreCollisions)
 		{
 			StartCoroutine(DetectorDelay());
 

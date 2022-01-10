@@ -61,7 +61,7 @@ public class PlayerSwipe : MonoBehaviour
 
 	private void Swipe()
 	{
-		if (_knife.IsFlying)
+		if (_knife.Flying)
 		{
 			return;
 		}
