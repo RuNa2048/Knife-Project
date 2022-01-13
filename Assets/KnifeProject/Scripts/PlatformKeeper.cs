@@ -30,6 +30,8 @@ public class PlatformKeeper : MonoBehaviour
 			}
 		}
 
+		//_lastSaveCheckpoint = _firstCheckpoint.CheckpointTransform;
+
 		int platformID = 0;
 
 		foreach (var platform in _platforms)

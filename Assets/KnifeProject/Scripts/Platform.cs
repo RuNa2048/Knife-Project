@@ -22,9 +22,16 @@ public abstract class Platform : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (other.TryGetComponent<FlipperKnife>(out var knife) && !knife.IgnoreCollisions)
+		FlipperKnife knife = other.GetComponentInParent<FlipperKnife>();
+
+		if (knife && knife.CollisionsIsWork && knife.SaveCheckpoint)
 		{
 			_platformKeeper.AllowToStand(this);
 		}
+
+		//if (other. TryGetComponent<FlipperKnife>(out var knife) && knife.TriggerIsWork)
+		//{
+		//	_platformKeeper.AllowToStand(this);
+		//}
 	}
 }

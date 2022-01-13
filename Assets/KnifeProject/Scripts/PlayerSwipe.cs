@@ -85,11 +85,11 @@ public class PlayerSwipe : MonoBehaviour
 			swipe.x = - _maxHorizontalSwipe;
 		}
 		
-		if (swipe.y < _stoppingSwipeValue)
-		{
-			swipe.y = _stoppingSwipeValue;
-			swipe.x = _stoppingSwipeValue;
-		}
+		//if (swipe.y < _stoppingSwipeValue)
+		//{
+		//	swipe.y = _stoppingSwipeValue;
+		//	swipe.x = _stoppingSwipeValue;
+		//}
 
 		return swipe;
 	}
