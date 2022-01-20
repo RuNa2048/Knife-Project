@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class FlipperKnife : MonoBehaviour
 {
 	[SerializeField] private bool _testMode = false;
@@ -12,6 +13,7 @@ public class FlipperKnife : MonoBehaviour
 	[SerializeField] private float _verticalKickForce = 6f;
 	[SerializeField] private float _torqueForce = 20f;
 	[SerializeField] private float _minVerticalForce = 0.6f;
+	[SerializeField] private float _minHorizontalForce = 0.03f;
 
 	[Header("Timings")]
 	[SerializeField] private float _detectorPauseTime = 0.5f;
@@ -54,11 +56,10 @@ public class FlipperKnife : MonoBehaviour
 		ChangePlatformDetectorSettings(true);
 
 		_collisionsIsWork = true;
-		_platformDetectorIsWork = true;
-		_saveCheckpoint = false;
 
 		_rigidbody.velocity = Vector3.zero;
 		_rigidbody.angularVelocity = Vector3.zero;
+		_rigidbody.isKinematic = false;
 
 		transform.position = pos;
 		transform.eulerAngles = _spawnRotating;
@@ -66,39 +67,43 @@ public class FlipperKnife : MonoBehaviour
 
 	public void Moving(Vector2 force)
 	{
-		_inFlight = true;
-		//_collisionsIsWork = true;
-		//_platformDetectorIsWork = true;
-		_rigidbody.isKinematic = false;
-
-		force.x *= _horizontalKickForce;
 		force.y *= _verticalKickForce;
 
 		if (CheckVerticalForce(force.y))
 		{
+			_rigidbody.isKinematic = false;
+			_inFlight = true;
+			_saveCheckpoint = false;
+
 			if (force.y > 0f)
 			{
 				StartCoroutine(DetectorDelay());
-
-				_rigidbody.AddTorque(_torqueForce * force.x, 0f, 0f, ForceMode.Impulse);
-				_rigidbody.AddForce(0, force.y, force.x, ForceMode.Impulse);
 			}
 			else
 			{
 				if (!_testMode)
 				{
 					ChangePlatformDetectorSettings(false);
-
-					_rigidbody.AddTorque(_torqueForce * force.x, 0f, 0f, ForceMode.Impulse);
-					_rigidbody.AddForce(0, force.y, force.x, ForceMode.Impulse);
 				}
 			}
+
+			if ((force.x >= 0f && force.x < _minHorizontalForce) || (force.x < 0f && force.x > -_minHorizontalForce))
+			{
+				force.x = _minHorizontalForce;
+			}
+			else
+			{
+				force.x *= _horizontalKickForce;
+			}
+
+			_rigidbody.AddTorque(_torqueForce * force.x, 0f, 0f, ForceMode.Impulse);
+			_rigidbody.AddForce(0, force.y, force.x, ForceMode.Impulse);
 		}
 	}
 
 	private bool CheckVerticalForce(float force)
 	{
-		if ((force < _minVerticalForce && force > 0f) || (force > -_minVerticalForce && force < 0f))
+		if ((force < _minVerticalForce && force >= 0f) || (force > -_minVerticalForce && force <= 0f))
 		{
 			return false;
 		}
@@ -138,6 +143,7 @@ public class FlipperKnife : MonoBehaviour
 	public void Destruction()
 	{
 		_saveCheckpoint = false;
+		_platformDetectorIsWork = false;
 
 		OnDestructionKnife?.Invoke(this);
 	}

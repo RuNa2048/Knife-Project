@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(FlipperKnife))]
 public class PlayerSwipe : MonoBehaviour
 {
 	[Header("Limitation Values")]
@@ -45,7 +46,6 @@ public class PlayerSwipe : MonoBehaviour
 					{
 						_startSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
 
-
 						break;
 					}
 				case TouchPhase.Ended:
@@ -84,12 +84,6 @@ public class PlayerSwipe : MonoBehaviour
 		{
 			swipe.x = - _maxHorizontalSwipe;
 		}
-		
-		//if (swipe.y < _stoppingSwipeValue)
-		//{
-		//	swipe.y = _stoppingSwipeValue;
-		//	swipe.x = _stoppingSwipeValue;
-		//}
 
 		return swipe;
 	}

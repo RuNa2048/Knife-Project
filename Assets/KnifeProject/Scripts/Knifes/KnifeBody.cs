@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(FlipperKnife), typeof(Rigidbody))]
 public class KnifeBody : MonoBehaviour
 {
 	private Rigidbody _rigidbody;
@@ -17,8 +18,6 @@ public class KnifeBody : MonoBehaviour
 	{
 		if (!_rigidbody.isKinematic && _knife.CollisionsIsWork)
 		{
-			Debug.Log(1);
-
 			_knife.Destruction();
 		}
 	}

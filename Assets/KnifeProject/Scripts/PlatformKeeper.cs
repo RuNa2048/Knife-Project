@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class PlatformKeeper : MonoBehaviour
 {
-	[Header("Refrences")]
+	[Header("Refrences To Platforms")]
 	[SerializeField] private List<Platform> _platforms;
+
+	[Header("Refrences")]
 	[SerializeField] private FlipperKnife _knife;
+	[SerializeField] private WindowBehaviour _windowBehaviour;
 
 	[SerializeField] private bool _testedMode;
 
@@ -14,24 +17,11 @@ public class PlatformKeeper : MonoBehaviour
 	public Vector3 LastSaveCheckpointPos() => _lastSaveCheckpoint.position;
 
 	private Platform _newPlatform;
-	private PlatformWithCheckpoint _firstCheckpoint;
 
 	private int _idLastPlatform = -1;
 
 	private void Start()
 	{
-		foreach (var platform in _platforms)
-		{
-			if (platform is PlatformWithCheckpoint plat)
-			{
-				_firstCheckpoint = plat;
-
-				break;
-			}
-		}
-
-		//_lastSaveCheckpoint = _firstCheckpoint.CheckpointTransform;
-
 		int platformID = 0;
 
 		foreach (var platform in _platforms)
@@ -60,13 +50,6 @@ public class PlatformKeeper : MonoBehaviour
 
 		if (CheckIDPlatform())
 		{
-			if (_newPlatform is PlatformWithoutCheckpoint)
-			{
-				Debug.Log(1);
-
-				//StandKnife();
-			}
-
 			if (_newPlatform is PlatformWithCheckpoint checkpointPlatform)
 			{
 				StandKnife();
@@ -110,9 +93,6 @@ public class PlatformKeeper : MonoBehaviour
 
 	private void FinishGame()
 	{
-		_lastSaveCheckpoint = _firstCheckpoint.CheckpointTransform;
-		_idLastPlatform = -1;
-
-		_knife.Destruction();
+		_windowBehaviour.EnableRestartWindow();
 	}
 }

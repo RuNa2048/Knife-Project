@@ -7,13 +7,6 @@ public abstract class Platform : MonoBehaviour
 
 	private PlatformKeeper _platformKeeper;
 
-	private string _playerTag;
-
-	private void Start()
-	{
-		_playerTag = ConstantsGameTags.PlayerTextTag;
-	}
-
 	public void Init(PlatformKeeper platKepper, int id)
 	{
 		_platformKeeper = platKepper;
@@ -28,10 +21,5 @@ public abstract class Platform : MonoBehaviour
 		{
 			_platformKeeper.AllowToStand(this);
 		}
-
-		//if (other. TryGetComponent<FlipperKnife>(out var knife) && knife.TriggerIsWork)
-		//{
-		//	_platformKeeper.AllowToStand(this);
-		//}
 	}
 }

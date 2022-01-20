@@ -17,11 +17,14 @@ public class PlayerCamera : MonoBehaviour
 	[SerializeField] private Vector3 _distanceToCenterScreen;
 
 	private bool _isMoving = false;
+	private Vector3 _startPosition;
 
 	private void Start()
 	{
 		_knife.OnStikingKnife += MoveToKnife;
+
 		_distanceToPlayer = _knife.transform.position - transform.position;
+		_startPosition = _knife.transform.position - _distanceToPlayer;
 	}
 
 	private void MoveToKnife()
@@ -31,7 +34,8 @@ public class PlayerCamera : MonoBehaviour
 			return;
 		}
 
-		Vector3 position = _knife.transform.position - _distanceToPlayer;
+		Vector3 position = _startPosition;
+		position.z = _knife.transform.position.z - _distanceToPlayer.z;
 
 		StartCoroutine(Moving(position));
 	}
@@ -68,15 +72,4 @@ public class PlayerCamera : MonoBehaviour
 
 		MoveToKnife();
 	}
-
-	//private void LateUpdate()
-	//{
-	//	Vector3 position = _player.transform.position + _distanceToPlayer;
-
-	//	transform.position = Vector3.Slerp(transform.position, position, _speed * Time.deltaTime);
-
-	//	Vector3 rotOffset = _player.transform.position + _distanceToCenterScreen;
-
-	//	transform.LookAt(rotOffset);
-	//}
 }
