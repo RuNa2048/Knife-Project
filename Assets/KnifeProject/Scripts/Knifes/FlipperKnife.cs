@@ -32,8 +32,11 @@ public class FlipperKnife : MonoBehaviour
 	public event Action OnStikingKnife;
 	public event Action<FlipperKnife> OnDestructionKnife;
 
+	public Vector3 LastPositionOnPlatform => _lastPositionOnPlatform;
+
 	private Rigidbody _rigidbody;
 	private SphereCollider _platformDetectorCollider;
+	private Vector3 _lastPositionOnPlatform;
 
 	private bool _inFlight = false;
 	private bool _collisionsIsWork = true;
@@ -133,9 +136,12 @@ public class FlipperKnife : MonoBehaviour
 
 	public void StandToPlatform()
 	{
+
 		_rigidbody.isKinematic = true;
 		_inFlight = false;
 		_saveCheckpoint = true;
+
+		_lastPositionOnPlatform = transform.position;
 
 		OnStikingKnife?.Invoke();
 	}

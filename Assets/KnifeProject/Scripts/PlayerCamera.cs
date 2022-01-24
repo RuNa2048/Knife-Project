@@ -35,7 +35,7 @@ public class PlayerCamera : MonoBehaviour
 		}
 
 		Vector3 position = _startPosition;
-		position.z = _knife.transform.position.z - _distanceToPlayer.z;
+		position.z = _knife.LastPositionOnPlatform.z - _distanceToPlayer.z;
 
 		StartCoroutine(Moving(position));
 	}
