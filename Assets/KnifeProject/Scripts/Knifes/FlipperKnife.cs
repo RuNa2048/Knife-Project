@@ -30,6 +30,7 @@ public class FlipperKnife : MonoBehaviour
 	public bool SaveCheckpoint => _saveCheckpoint;
 
 	public event Action OnStikingKnife;
+	public event Action OnJumpingKnife;
 	public event Action<FlipperKnife> OnDestructionKnife;
 
 	public Vector3 LastPositionOnPlatform => _lastPositionOnPlatform;
@@ -59,6 +60,7 @@ public class FlipperKnife : MonoBehaviour
 		ChangePlatformDetectorSettings(true);
 
 		_collisionsIsWork = true;
+		_inFlight = false;
 
 		_rigidbody.velocity = Vector3.zero;
 		_rigidbody.angularVelocity = Vector3.zero;
@@ -99,6 +101,8 @@ public class FlipperKnife : MonoBehaviour
 				force.x *= _horizontalKickForce;
 			}
 
+			OnJumpingKnife?.Invoke();
+
 			_rigidbody.AddTorque(_torqueForce * force.x, 0f, 0f, ForceMode.Impulse);
 			_rigidbody.AddForce(0, force.y, force.x, ForceMode.Impulse);
 		}
@@ -136,7 +140,6 @@ public class FlipperKnife : MonoBehaviour
 
 	public void StandToPlatform()
 	{
-
 		_rigidbody.isKinematic = true;
 		_inFlight = false;
 		_saveCheckpoint = true;
@@ -150,6 +153,7 @@ public class FlipperKnife : MonoBehaviour
 	{
 		_saveCheckpoint = false;
 		_platformDetectorIsWork = false;
+		_collisionsIsWork = false;
 
 		OnDestructionKnife?.Invoke(this);
 	}
