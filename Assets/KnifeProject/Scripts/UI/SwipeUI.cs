@@ -42,7 +42,7 @@ public class SwipeUI : MonoBehaviour
 
                     Vector2 localPos = CalculatePositionInRect(touch.position, camera);
 
-                    _linePosition.localPosition = localPos;
+                    //_linePosition.localPosition = localPos;
                     _startSwipe.localPosition = localPos;
 
                     break;
@@ -53,7 +53,7 @@ public class SwipeUI : MonoBehaviour
 
                     _endSwipe.localPosition = CalculatePositionInRect(touch.position, camera);
 
-                    _swipeLine.Moving(_endSwipe.position);
+                    _swipeLine.Moving(_startSwipe.localPosition,  _endSwipe.localPosition);
 
                     break;
                 }
