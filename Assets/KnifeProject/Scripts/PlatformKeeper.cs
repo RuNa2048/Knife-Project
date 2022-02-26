@@ -14,6 +14,7 @@ public class PlatformKeeper : MonoBehaviour
 	[SerializeField] private bool _testedMode;
 
 	private Transform _lastSaveCheckpoint;
+
 	public Vector3 LastSaveCheckpointPos => _lastSaveCheckpoint.position;
 
 	private Platform _newPlatform;
