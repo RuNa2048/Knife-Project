@@ -33,9 +33,9 @@ public class KnifePlatformDetector : KnifePart
 
 		if (currentXRot > _minStandRotation || currentXRot < -_minStandRotation)
 		{
-			return false;
+			return true;
 		}
 
-		return true;
+		return false;
 	}
 }

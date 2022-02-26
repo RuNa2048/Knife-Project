@@ -64,7 +64,7 @@ public class FlipperKnife : MonoBehaviour
 
 		_rigidbody.velocity = Vector3.zero;
 		_rigidbody.angularVelocity = Vector3.zero;
-		_rigidbody.isKinematic = false;
+		//_rigidbody.isKinematic = false;
 
 		transform.position = pos;
 		transform.eulerAngles = _spawnRotating;
@@ -140,9 +140,12 @@ public class FlipperKnife : MonoBehaviour
 
 	public void StandToPlatform()
 	{
+		_rigidbody.velocity = Vector3.zero;
 		_rigidbody.isKinematic = true;
+
 		_inFlight = false;
 		_saveCheckpoint = true;
+		_platformDetectorIsWork = false;
 
 		_lastPositionOnPlatform = transform.position;
 
