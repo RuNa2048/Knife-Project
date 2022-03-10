@@ -15,7 +15,7 @@ public abstract class Platform : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
-		FlipperKnife knife = other.GetComponentInParent<FlipperKnife>();
+		Knife knife = other.GetComponentInParent<Knife>();
 
 		if (knife && knife.CollisionsIsWork && knife.SaveCheckpoint)
 		{

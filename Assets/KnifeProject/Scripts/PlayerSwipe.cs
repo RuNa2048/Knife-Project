@@ -1,62 +1,100 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-[RequireComponent(typeof(FlipperKnife))]
 public class PlayerSwipe : MonoBehaviour
 {
 	[Header("Limitation Values")]
 	[SerializeField] private float _maxHorizontalSwipe = 1f;
 	[SerializeField] private float _stoppingSwipeValue = 0f;
 
-	[Header("References")]
-	[SerializeField] private SwipeUI _swipe;
+	private SwipeUI _swipe;
+	private Knife _knife;
+	private MovingKnife _movingKnife;
+	private Camera _mainCamera;
 
-	private FlipperKnife _knife;
     private Vector2 _startSwipePos;
     private Vector2 _endSwipePos;
-	private Camera _mainCamera;
-	
-	private void Awake()
-	{
-		_knife = GetComponent<FlipperKnife>();
-	}
+    
+    private bool _isBlocked = false;
+    
+    public void Initialize(Knife knife, SwipeUI swipeView)
+    {
+	    _knife = knife;
+	    _swipe = swipeView;
+	    
+	    _movingKnife = _knife.GetComponent<MovingKnife>();
+		
+	    _mainCamera = Camera.main;
+	    
+	    _swipe.AssighnCamera(_mainCamera);
+	    
+	    _knife.OnJumped += DisableSwipe;
+	    _knife.OnStandedToPlatform += ActivateSwipe;
+    }
 
-	private void Start()
-	{
-		_mainCamera = Camera.main;
-	}
-
-	private void Update()
+    private void Update()
 	{
 		CheckInput();
 	}
 
 	private void CheckInput()
 	{
-#if PLATFORM_ANDROID
-
-		if (Input.touchCount > 0)
+#if UNITY_EDITOR
+		
+		Vector3 mousePosition = Input.mousePosition;
+		
+		if (Input.GetMouseButtonDown(0))
 		{
-			Touch touch = Input.GetTouch(0);
+			_swipe.ActivateSwipe(mousePosition);
+			
+			_startSwipePos = _mainCamera.ScreenToViewportPoint(mousePosition);
+		}
 
-			_swipe.ActivateSwipe(touch, _mainCamera);
+		if (Input.GetMouseButton(0))
+		{
+			_swipe.UpdateCursor(mousePosition);
+		}
+		
+		if (Input.GetMouseButtonUp(0))
+		{
+			_endSwipePos = _mainCamera.ScreenToViewportPoint(mousePosition);
+				
+			_swipe.TurnOff();
+				
+			Swipe();
+		}
+#elif  UNITY_ANDROID
 
-			switch (touch.phase)
+		if (Input.touchCount == 0)
+			return;
+
+		Touch touch = Input.GetTouch(0);
+
+		_swipe.ActivateSwipe(touch.position);
+
+		switch (touch.phase)
+		{
+			case TouchPhase.Began:
 			{
-				case TouchPhase.Began:
-					{
-						_startSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
+				_startSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
 
-						break;
-					}
-				case TouchPhase.Ended:
-					{
-						_endSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
-						Swipe();
+				break;
+			}
+			case TouchPhase.Moved:
+			{
+				_swipe.UpdateCursor(touch.position);
 
-						break;
-					}
+				break;
+			}
+			case TouchPhase.Ended:
+			{
+				_endSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
+				
+				_swipe.TurnOff();
+				
+				Swipe();
+
+				break;
 			}
 		}
 #endif
@@ -64,30 +102,35 @@ public class PlayerSwipe : MonoBehaviour
 
 	private void Swipe()
 	{
-		if (_knife.Flying)
-		{
+		if (_isBlocked)
 			return;
-		}
 
 		Vector2 swipeForce = _endSwipePos - _startSwipePos;
-
 		swipeForce = CheckSwipeForValidValues(swipeForce);
 
-		_knife.Moving(swipeForce);
+		_movingKnife.Moving(swipeForce);
 	}
 
 	private Vector2 CheckSwipeForValidValues(Vector2 swipe)
 	{
-		if (swipe.x > _maxHorizontalSwipe)
-		{
-			swipe.x = _maxHorizontalSwipe;
-		}
-
-		if (swipe.x < - _maxHorizontalSwipe)
-		{
-			swipe.x = - _maxHorizontalSwipe;
-		}
+		swipe.x = Mathf.Clamp(swipe.x, -_maxHorizontalSwipe, _maxHorizontalSwipe);
 
 		return swipe;
+	}
+
+	private void DisableSwipe()
+	{
+		_isBlocked = true;
+	}
+	
+	private void ActivateSwipe()
+	{
+		_isBlocked = false;
+	}
+
+	private void OnDestroy()
+	{
+		_knife.OnJumped -= DisableSwipe;
+		_knife.OnStandedToPlatform -= ActivateSwipe;
 	}
 }

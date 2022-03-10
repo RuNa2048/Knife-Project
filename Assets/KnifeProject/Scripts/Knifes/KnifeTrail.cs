@@ -8,20 +8,20 @@ public class KnifeTrail : MonoBehaviour
 
 
     private TrailRenderer _trail;
-    private FlipperKnife _knife;
+    private Knife _knife;
 	private Transform _knifeTransform;
 
 	private void Awake()
 	{
 		_trail = GetComponent<TrailRenderer>();
-		_knife = GetComponentInParent<FlipperKnife>();
+		_knife = GetComponentInParent<Knife>();
 	}
 
 	private void Start()
 	{
 		_knifeTransform = _knife.transform;
 
-		_knife.OnJumpingKnife += PlayTrailEffect;
+		_knife.OnJumped += PlayTrailEffect;
 	}
 
 	private void PlayTrailEffect()

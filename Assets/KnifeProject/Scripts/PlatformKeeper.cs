@@ -4,24 +4,22 @@ using UnityEngine;
 
 public class PlatformKeeper : MonoBehaviour
 {
-	[Header("Refrences To Platforms")]
+	[Header("References To Platforms")]
 	[SerializeField] private List<Platform> _platforms;
 
-	[Header("Refrences")]
-	[SerializeField] private FlipperKnife _knife;
+	[Header("References")]
 	[SerializeField] private WindowBehaviour _windowBehaviour;
-
-	[SerializeField] private bool _testedMode;
-
+	
+	private Knife _knife;
+	
 	private Transform _lastSaveCheckpoint;
-
 	public Vector3 LastSaveCheckpointPos => _lastSaveCheckpoint.position;
 
 	private Platform _newPlatform;
 
 	private int _idLastPlatform = -1;
 
-	private void Start()
+	public void InitializeAllPlatforms()
 	{
 		int platformID = 0;
 
@@ -31,6 +29,8 @@ public class PlatformKeeper : MonoBehaviour
 
 			platformID++;
 		}
+
+		AllowToStand(_platforms[0]);
 	}   
 
 	public void AllowToStand(Platform platform)
@@ -44,7 +44,7 @@ public class PlatformKeeper : MonoBehaviour
 
 		if (_newPlatform is ForbiddenPlatform)
 		{
-			_knife.Destruction();
+			_knife.Destructed();
 
 			return;
 		}
@@ -59,7 +59,7 @@ public class PlatformKeeper : MonoBehaviour
 		}
 		else
 		{
-			_knife.Destruction();
+			_knife.Destructed();
 		}
 	}
 

@@ -12,12 +12,14 @@ public class SwipeUI : MonoBehaviour
 
     private List<RectTransform> _swipeElements;
 
-    private RectTransform _swipeCanvas;
+    [SerializeField] private RectTransform _swipeCanvas;
     private SwipeLineUI _swipeLine;
+    private Camera _camera;
 
 	private void Awake()
 	{
         _swipeCanvas = GetComponent<RectTransform>();
+        
        _swipeLine = _linePosition.GetComponent<SwipeLineUI>();
 	}
 
@@ -29,52 +31,49 @@ public class SwipeUI : MonoBehaviour
         _swipeElements.Add(_endSwipe);
         _swipeElements.Add(_linePosition);
 
+        _swipeLine.Initialize();
+
         ChangeSwipeCondition(false);
     }
 
-	public void ActivateSwipe(Touch touch, Camera camera)
+    public void AssighnCamera(Camera camera)
     {
-        switch (touch.phase)
-        {
-            case TouchPhase.Began:
-                {
-                    _startSwipe.gameObject.SetActive(true);
-
-                    Vector2 localPos = CalculatePositionInRect(touch.position, camera);
-
-                    //_linePosition.localPosition = localPos;
-                    _startSwipe.localPosition = localPos;
-
-                    break;
-                }
-            case TouchPhase.Moved:
-                {
-                    ChangeSwipeCondition(true);
-
-                    _endSwipe.localPosition = CalculatePositionInRect(touch.position, camera);
-
-                    _swipeLine.Moving(_startSwipe.localPosition,  _endSwipe.localPosition);
-
-                    break;
-                }
-            case TouchPhase.Ended:
-                {
-                    _startSwipe.localPosition = Vector2.zero;
-                    _endSwipe.localPosition = Vector2.zero;
-                    _linePosition.localPosition = Vector2.zero;
-
-                    ChangeSwipeCondition(false);
-
-                    break;
-                }
-        }
+        _camera = camera;
     }
 
-    private Vector2 CalculatePositionInRect(Vector2 pos, Camera camera)
+    public void ActivateSwipe(Vector2 position)
+    {
+        _startSwipe.gameObject.SetActive(true);
+
+        Vector2 localPos = CalculatePositionInRect(position);
+
+        _startSwipe.localPosition = localPos;
+    }
+
+    public void UpdateCursor(Vector2 position)
+    {
+        ChangeSwipeCondition(true);
+
+        _endSwipe.localPosition = CalculatePositionInRect(position);
+
+        _swipeLine.Moving(_startSwipe.localPosition,  _endSwipe.localPosition);
+    }
+
+    public void TurnOff()
+    {
+        foreach (var rect in _swipeElements)
+        {
+            rect.localPosition = Vector2.zero;
+        }
+        
+        ChangeSwipeCondition(false);
+    }
+
+    private Vector2 CalculatePositionInRect(Vector2 pos)
     {
         Vector2 movePos;
-
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(_swipeCanvas, pos, camera, out movePos);
+        
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(_swipeCanvas, pos, _camera, out movePos);
 
         return movePos;
     }
