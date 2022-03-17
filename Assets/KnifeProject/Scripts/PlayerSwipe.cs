@@ -63,19 +63,22 @@ public class PlayerSwipe : MonoBehaviour
 				
 			Swipe();
 		}
-#elif  UNITY_ANDROID
-
+		
+#endif
+		
+#if  UNITY_ANDROID
+		
 		if (Input.touchCount == 0)
 			return;
 
 		Touch touch = Input.GetTouch(0);
-
-		_swipe.ActivateSwipe(touch.position);
-
+		
 		switch (touch.phase)
 		{
 			case TouchPhase.Began:
 			{
+				_swipe.ActivateSwipe(touch.position);
+				
 				_startSwipePos = _mainCamera.ScreenToViewportPoint(touch.position);
 
 				break;

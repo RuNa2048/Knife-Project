@@ -15,7 +15,6 @@ public class KnifePlatformDetector : MonoBehaviour
 	private Knife _knife;
 	private SphereCollider _platformDetectorCollider;
 
-	private string _platformTag;
 	private bool _platformDetectorIsWork = false;
 
 	private void Awake()
@@ -26,17 +25,15 @@ public class KnifePlatformDetector : MonoBehaviour
 
 	private void Start()
 	{
-		_platformTag = ConstantsGameTags.PlatformTextTag;
-
 		_knife.OnDestructed += EnablePlatformDetector;
 	}
-	
+
 	private void OnTriggerEnter(Collider other)
 	{
-		if (_knife.IsKinematic || !other.CompareTag(_platformTag) || !_platformDetectorIsWork) 
+		if (_knife.IsKinematic || !_platformDetectorIsWork) 
 			return;
-
-		if (CheckAngleOfInclination())
+		
+		if (CheckAngleOfInclination() || !other.TryGetComponent(out Platform platform))
 		{
 			_knife.Destructed();
 			
@@ -55,8 +52,6 @@ public class KnifePlatformDetector : MonoBehaviour
 	{
 		var currentXRot = _knife.transform.rotation.x;
 		
-		Debug.Log(currentXRot);
-
 		return currentXRot > _minStandRotation || currentXRot < -_minStandRotation;
 	}
 

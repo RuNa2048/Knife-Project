@@ -11,6 +11,7 @@ public class SwipeCreator : MonoBehaviour
     [SerializeField] private RectTransform _playerInput;
 
     public PlayerSwipe CreateSwipe(Knife knife)
+    
     {
         SwipeUI swipeUI = Instantiate(_swipeUI, _playerInput);
         PlayerSwipe playerSwipe = Instantiate(_playerSwipe, transform);

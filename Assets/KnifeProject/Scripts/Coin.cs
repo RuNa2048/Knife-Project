@@ -20,6 +20,7 @@ public class Coin : MonoBehaviour
 	private Vector3 _endPosition;
 
 	private bool _increase = false;
+	private bool _tacked = false;
 
 	public void Initialithation(CoinCounter counter)
 	{
@@ -29,6 +30,11 @@ public class Coin : MonoBehaviour
 
 	private void OnTriggerEnter(Collider other)
 	{
+		if (_tacked) 
+			return;
+
+		_tacked = true;
+		
 		_coinCounter.IncreaseAmountOfCoins();
 
 		MoveToEndpoint();	
@@ -81,7 +87,6 @@ public class Coin : MonoBehaviour
 			yield return null;
 		}
 	}
-
 
 	private IEnumerator Move()
 	{

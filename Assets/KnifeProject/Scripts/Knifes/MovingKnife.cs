@@ -68,36 +68,18 @@ public class MovingKnife : MonoBehaviour
 
     public void Moving(Vector2 force)
     {
-        float standartTorque = 1f;
-        
         force.y *= _verticalKickForce;
 
-        if (CheckMinimalVerticalForce(force.y)) return;
+        if (CheckMinimalVerticalForce(force.y))
+            return;
         
-        if (force.y < 2f && force.y >= 0f)
-        {
-            int torqueDirection = Random.value < 0.5f ? -1 : 1;
-
-            standartTorque = torqueDirection * 3f;
-
-            if (force.x < 0.1)
-                force.x = 0.15f;
-        }
-        
-        Debug.Log($"{standartTorque} {force.x}");
-        
-        if (force.y > 0f)
-        {
-            _platformDetector.DisableDetectorTemporarily();
-        }
-        else
-        {
-            _platformDetector.EnableTrigger(false);
-        }
+        CheckVerticalForceDirection(force.y);
 
         if ((force.x >= 0f && force.x < _minHorizontalForce) || (force.x < 0f && force.x > -_minHorizontalForce))
         {
-            force.x = _minHorizontalForce;
+            int torqueDirection = Random.value < 0.5f ? -1 : 1;
+
+            force.x = _minHorizontalForce * torqueDirection * 3;
         }
         else
         {
@@ -106,12 +88,24 @@ public class MovingKnife : MonoBehaviour
         
         _knife.Jumped();
             
-        _rigidbody.AddTorque(_torqueForce * force.x * standartTorque, 0f, 0f, ForceMode.Impulse);
-        _rigidbody.AddForce(0, force.y, force.x * standartTorque, ForceMode.Impulse);
+        _rigidbody.AddTorque(_torqueForce * force.x, 0f, 0f, ForceMode.Impulse);
+        _rigidbody.AddForce(0, force.y, force.x, ForceMode.Impulse);
     }
 
     private bool CheckMinimalVerticalForce(float force)
     {
         return (force < _minVerticalForce && force >= 0f) || (force > -_minVerticalForce && force <= 0f);
+    }
+    
+    private void CheckVerticalForceDirection(float force)
+    {
+        if (force > 0f)
+        {
+            _platformDetector.DisableDetectorTemporarily();
+        }
+        else
+        {
+            _platformDetector.EnableTrigger(false);
+        }
     }
 }

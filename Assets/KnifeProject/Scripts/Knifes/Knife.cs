@@ -55,23 +55,22 @@ public class Knife : MonoBehaviour
 	public void Destructed()
 	{
 		_saveCheckpoint = false;
-		ChangePlatformDetectorState(false);
-
-		Debug.Log("Destruction");
-
+		
+		ChangeCollisionState(false);
+		
 		OnDestructed?.Invoke();
 	}
 	
 	private IEnumerator DetectorDelay()
 	{
-		ChangePlatformDetectorState(false);
+		ChangeCollisionState(false);
 
 		yield return new WaitForSeconds(_collisionPauseTime);
 
-		ChangePlatformDetectorState(true);
+		ChangeCollisionState(true);
 	}
 
-	private void ChangePlatformDetectorState(bool state)
+	private void ChangeCollisionState(bool state)
 	{
 		_collisionsIsWork = state;
 	}

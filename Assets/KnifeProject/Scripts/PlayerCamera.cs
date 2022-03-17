@@ -99,6 +99,7 @@ public class PlayerCamera : MonoBehaviour
 	private Vector3 CalculatePositionForMoving(float startPosition, float movingDistance)
 	{
 		var newPosition = _preparedXYPosition;
+		newPosition.z = _knife.transform.position.z + _distanceToPlayer.z;
 		newPosition.z += movingDistance;
 
 		return newPosition;
