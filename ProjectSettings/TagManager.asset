@@ -15,8 +15,8 @@ TagManager:
   - UI
   - 
   - 
-  - Checkpoint
-  - 
+  - Trail
+  - Knife
   - 
   - 
   - 
@@ -42,4 +42,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Trail
+    uniqueID: 4013567453
+    locked: 0
+  - name: Knife
+    uniqueID: 1586365249
     locked: 0
