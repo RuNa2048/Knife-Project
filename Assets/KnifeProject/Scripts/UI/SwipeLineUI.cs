@@ -12,7 +12,7 @@ public class SwipeLineUI : MonoBehaviour
 
     private int _amountPoints;
 
-    private void Start()
+    public void Initialize()
 	{
         _amountPoints = _points.Length;
     }
@@ -20,6 +20,7 @@ public class SwipeLineUI : MonoBehaviour
 	public void Moving(Vector3 startPoint, Vector3 directionPoint)
     {
         Vector3 distance = directionPoint - startPoint;
+        distance.z = 0;
 
         _startPos = startPoint;
 

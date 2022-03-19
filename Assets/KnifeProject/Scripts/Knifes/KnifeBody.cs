@@ -1,24 +1,23 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(FlipperKnife), typeof(Rigidbody))]
+[RequireComponent(typeof(Knife))]
 public class KnifeBody : MonoBehaviour
 {
-	private Rigidbody _rigidbody;
-	private FlipperKnife _knife;
+	private Knife _knife;
 
 	private void Awake()
 	{
-		_rigidbody = GetComponent<Rigidbody>();
-		_knife = GetComponent<FlipperKnife>();
+		_knife = GetComponent<Knife>();
 	}
 
 	private void OnCollisionEnter(Collision collision)
-	{
-		if (!_rigidbody.isKinematic && _knife.CollisionsIsWork)
-		{
-			_knife.Destruction();
-		}
+	{ 
+		if (_knife.IsKinematic || !_knife.CollisionsIsWork)
+			return;
+
+		_knife.Destructed();
 	}
 }

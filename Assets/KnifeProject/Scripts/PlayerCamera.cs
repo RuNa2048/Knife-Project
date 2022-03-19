@@ -6,58 +6,57 @@ using UnityEngine;
 public class PlayerCamera : MonoBehaviour
 {
 	[Header("Refernces")]
-	[SerializeField] private FlipperKnife _knife;
+	[SerializeField] private Knife _knife;
 	[SerializeField] private PlatformKeeper _platformKeeper;
 
 	[Header("Moving Settings")]
 	[SerializeField] private float _speed = 10f;
 	[SerializeField] private float _movingThreshold = 0.5f;
-	[SerializeField] private float _distanceToMoveForNextPlatforms = 12f;
+	[SerializeField] private float _eyeDistance = 12f;
 	[SerializeField] private float _distanceToMoveForKnifeExit = 12f;
 
 	[Header("Distance To Points")]
 	[SerializeField] private Vector3 _distanceToPlayer;
-	[SerializeField] private Vector3 _distanceToCenterScreen;
 
 	private Camera _camera;
 	private Vector3 _preparedXYPosition;
-
-	private bool _isMoving = false;
-
+	
 	private void Awake()
 	{
 		_camera = GetComponent<Camera>();
 	}
 
-	private void Start()
+	public void Initialize(Knife knife)
 	{
-		_knife.OnStikingKnife += MoveToKnife;
-		_knife.OnJumpingKnife += RunCameraCheck;
+		_knife = knife;
+		
+		_knife.OnStandedToPlatform += MoveToKnife;
+		_knife.OnDestructed += MoveToKnife;
+		_knife.OnJumped += NotCompletelyFollow;
+		
+		_preparedXYPosition = _knife.transform.position + _distanceToPlayer;
 
-		_distanceToPlayer = _knife.transform.position - transform.position;
-		_preparedXYPosition = _knife.transform.position - _distanceToPlayer;
+		transform.position = _preparedXYPosition;
 	}
 
-	private void RunCameraCheck()
+	private void NotCompletelyFollow()
 	{
 		StartCoroutine(CheckKnifeForExitingCamera());
 	}
 
 	private IEnumerator CheckKnifeForExitingCamera()
 	{
-		Vector3 point;
-
-		while (_knife.Flying)
+		while (true)
 		{
-			point = _camera.WorldToViewportPoint(_knife.transform.position);
+			Vector3 viewportPoint = _camera.WorldToViewportPoint(_knife.transform.position);
 
-			if (point.x > 1f)
+			if (viewportPoint.x > 1f)
 			{
-				Vector3 newPos = _preparedXYPosition;
-				newPos.z = _platformKeeper.LastSaveCheckpointPos.z - _distanceToPlayer.z;
-				newPos.z += _distanceToMoveForKnifeExit;
+				Vector3 positionBeforeMoving = CalculatePositionForMoving(
+					_platformKeeper.LastSaveCheckpointPos.z, 
+					_distanceToMoveForKnifeExit);
 
-				StartCoroutine(Moving(newPos));
+				StartCoroutine(Moving(positionBeforeMoving));
 
 				yield break;
 			}
@@ -65,67 +64,44 @@ public class PlayerCamera : MonoBehaviour
 			yield return null;
 		}
 	}
-
-
-	private void FollowToKnife()
+	
+	public void MoveForwardToEyeDistance()
 	{
-		Vector3 point = _camera.WorldToViewportPoint(_knife.transform.position);
-		Vector3 position = transform.position;
+		StopAllCoroutines();
 
-		position.z = _knife.transform.position.z - _distanceToPlayer.z;
+		Vector3 positionBeforeMoving = CalculatePositionForMoving(
+			_platformKeeper.LastSaveCheckpointPos.z, 
+			_eyeDistance);
 
-		if (point.x > 1f)
-		{
-			transform.position = Vector3.Slerp(transform.position, position, _speed * Time.deltaTime);
-		}
+		StartCoroutine(Moving(positionBeforeMoving));
 	}
 
-	private void MoveToKnife()
+	public void MoveToKnife()
 	{
-		if (_isMoving)
-		{
-			return;
-		}
-
 		StopAllCoroutines();
 
 		Vector3 position = _preparedXYPosition;
-		position.z = _knife.LastPositionOnPlatform.z - _distanceToPlayer.z;
+		position.z = _knife.transform.position.z + _distanceToPlayer.z;
 
 		StartCoroutine(Moving(position));
 	}
 
 	private IEnumerator Moving(Vector3 pos)
 	{
-		_isMoving = true;
-
 		while (Vector3.Distance(transform.position, pos) > _movingThreshold)
 		{
 			transform.position = Vector3.Slerp(transform.position, pos, _speed * Time.deltaTime);
 
 			yield return null;
 		}
-
-		_isMoving = false;
 	}
-
-	public void MoveForwardToDistance()
+	
+	private Vector3 CalculatePositionForMoving(float startPosition, float movingDistance)
 	{
-		StopAllCoroutines();
+		var newPosition = _preparedXYPosition;
+		newPosition.z = _knife.transform.position.z + _distanceToPlayer.z;
+		newPosition.z += movingDistance;
 
-		Vector3 newPos = _preparedXYPosition;
-		newPos.z = _platformKeeper.LastSaveCheckpointPos.z - _distanceToPlayer.z;
-		newPos.z += _distanceToMoveForNextPlatforms;
-
-		StartCoroutine(Moving(newPos));
-	}
-
-	public void ReturnBackToLastPosition()
-	{
-		StopAllCoroutines();
-
-		_isMoving = false;
-
-		MoveToKnife();
+		return newPosition;
 	}
 }

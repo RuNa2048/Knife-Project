@@ -13,7 +13,7 @@ public class CoinCounter : MonoBehaviour
 
 	private void Start()
 	{
-		_currentAmountCoins = _player.Coins;
+		_currentAmountCoins = 0;
 
 		_coinCountUI.ChangeCount(_currentAmountCoins);
 	}
